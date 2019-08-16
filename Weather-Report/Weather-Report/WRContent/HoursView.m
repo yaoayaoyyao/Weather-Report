@@ -29,7 +29,7 @@
     _timeLabel.frame = CGRectMake( 5, 0, 90, 40);
     _timeLabel.textColor = [UIColor whiteColor];
     _timeLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];
-    _timeLabel.textAlignment = UITextAlignmentCenter;
+    _timeLabel.textAlignment = NSTextAlignmentCenter;
     
     _weatherImageView.frame = CGRectMake( 35, 50, 40, 30);
     
@@ -37,6 +37,7 @@
     _temLabel.frame = CGRectMake( 25, 90, 50, 40);
     _temLabel.textColor = [UIColor whiteColor];
     _temLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:30];
+    _temLabel.textAlignment = NSTextAlignmentCenter;
     
 }
 

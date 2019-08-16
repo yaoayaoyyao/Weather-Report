@@ -13,11 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentViewController : UIViewController
 
 @property NSMutableArray *contentMutableArray;
-@property NSInteger contentNumber;
 @property NSMutableArray *futureHourMutableArray;
 @property NSMutableArray *futureDayMutableArray;
 @property NSMutableArray *nowMutableArray;
 @property NSMutableArray *nowWeatherMutableArray;
+
+@property (nonatomic, assign) NSInteger contentNumber;
 
 @end
 

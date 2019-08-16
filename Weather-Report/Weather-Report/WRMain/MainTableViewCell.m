@@ -57,7 +57,7 @@
             }
         } else {
             if (comp.minute < 10) {
-                str = [NSString stringWithFormat:@"下午%ld:%0ld", comp.hour, comp.minute];
+                str = [NSString stringWithFormat:@"下午%ld:0%ld", comp.hour, comp.minute];
             } else {
                 str = [NSString stringWithFormat:@"下午%ld:%ld", comp.hour, comp.minute];
             }

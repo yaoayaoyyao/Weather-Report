@@ -87,7 +87,7 @@
     contentViewController.nowWeatherMutableArray = _nowWeatherMutableArray;
     contentViewController.futureDayMutableArray = _futureDayMutableArray;
     contentViewController.futureHourMutableArray = _futureHourMutableArray;
-//在跳转钱唤醒主线程
+//在跳转前唤醒主线程
     [self performSelectorOnMainThread:@selector(WakeUpTheMainThread) withObject:nil waitUntilDone:NO];
     [self presentViewController:contentViewController animated:YES completion:nil];
 }
@@ -104,6 +104,7 @@
     if (i == [_mainMutableArray count]) {
         [_mainMutableArray addObject:str];
     }
+    
 //主界面网页请求
     NSString *strMain = [NSString stringWithFormat:@"https://free-api.heweather.com/s6/weather?location=%@&key=9f24a96156ad40cb9db5e064d698081e",str];
     strMain = [strMain stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"`#%^{}\"[]|\\<> "].invertedSet];
@@ -122,14 +123,14 @@
         }];
     }];
     [mainDataTask resume];
-    
-    
+
+
 //content界面网页请求
     _nowMutableArray = [[NSMutableArray alloc]init];
     _nowWeatherMutableArray = [[NSMutableArray alloc]init];
     _futureDayMutableArray = [[NSMutableArray alloc]init];
     _futureHourMutableArray = [[NSMutableArray alloc]init];
-    
+
     for (int j = 0; j < [_mainMutableArray count]; j++) {
 //和风天气API
         NSString *nowContentString = [NSString stringWithFormat:@"https://free-api.heweather.com/s6/weather?location=%@&key=9f24a96156ad40cb9db5e064d698081e",_mainMutableArray[j]];
@@ -141,9 +142,9 @@
             if (error == nil) {
                 id nowContentObjc = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                 NSString *strtmp = [NSString stringWithFormat:@"%@°",nowContentObjc[@"HeWeather6"][0][@"now"][@"tmp"]];
-//                NSLog(@"Weather--%d--%@--%@", j, self->_mainMutableArray[j],strtmp);
+                NSLog(@"Weather--%d--%@--%@", j, self->_mainMutableArray[j],strtmp);
                 NSString *strsr = [NSString stringWithFormat:@"上午%@",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"sr"]];
-                
+
                 int ssHourTime = [[nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"ss"] substringWithRange:NSMakeRange(0, 2)] intValue];
                 int ssMinuteTime = [[nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"ss"] substringWithRange:NSMakeRange(3, 2)] intValue];
                 NSString *strss = [[NSString alloc]init];
@@ -175,7 +176,7 @@
                         }
                     }
                 }
-                
+
                 NSString *strpop = [NSString stringWithFormat:@"%@%%",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"pop"]];
                 NSString *strhum = [NSString stringWithFormat:@"%@%%",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"hum"]];
                 NSString *strWind = [NSString stringWithFormat:@"%@ %@公里/小时",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"wind_dir"],nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"wind_spd"]];
@@ -183,16 +184,16 @@
                 NSString *strpcpn = [NSString stringWithFormat:@"%@毫米",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"pcpn"]];
                 NSString *strpres = [NSString stringWithFormat:@"%@百帕",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"pres"]];
                 NSString *strvis = [NSString stringWithFormat:@"%@公里",nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"vis"]];
-                
+
                 NSMutableArray *now = [[NSMutableArray alloc]initWithObjects: strsr, strss, strpop, strhum, strWind, strFl, strpcpn, strpres, strvis, nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"uv_index"], self->_mainMutableArray[j], nil];
                 [self->_nowMutableArray addObject:now];
-                
+
                 Weather *nowWeather = [[Weather alloc]initWithcond:nowContentObjc[@"HeWeather6"][0][@"now"][@"cond_txt"] andtmpNow:strtmp andtmpMax:nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"tmp_max"] andtmpMin:nowContentObjc[@"HeWeather6"][0][@"daily_forecast"][0][@"tmp_min"] andcomf:nowContentObjc[@"HeWeather6"][0][@"lifestyle"][0][@"txt"] andlocation:self->_mainMutableArray[j]];
                 [self->_nowWeatherMutableArray addObject:nowWeather];
             }
         }];
         [nowContentDataTask resume];
-        
+
 //NowAPI
         NSString *futureDayContentString = [NSString stringWithFormat:@"http://api.k780.com/?app=weather.realtime&weaid=%@&ag=today,futureDay,lifeIndex,futureHour&appkey=44497&sign=8818ce7afd663dc666ab8ee499f3a163&format=json",_mainMutableArray[j]];
         futureDayContentString = [futureDayContentString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"`#%^{}\"[]|\\<> "].invertedSet];
@@ -217,13 +218,13 @@
             if (error == nil) {
                 id futureHourContentObjc = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                 NSMutableArray *futureHourArray = [[NSMutableArray alloc]init];
-                
+
                 NSDate *dt = [NSDate date];
                 NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
                 unsigned unitFlags = NSCalendarUnitHour;
                 NSDateComponents *comp = [gregorian components:unitFlags fromDate:dt];
                 long int sumHour = comp.hour - 1;
-                
+
                 for (int i = 0; i < 24; i++) {
                     sumHour++;
                     if (sumHour == 25) {
@@ -238,7 +239,7 @@
                     if (i == 0) {
                         strdateYmdh = [NSString stringWithFormat:@"现在"];
                     }
-                    
+
                     NSString *strtmp = [NSString stringWithFormat:@"%@°",futureHourContentObjc[@"result"][@"futureHour"][i][@"wtTemp"]];
                     FutureHour *futureHour = [[FutureHour alloc]initWithdateYmdh:strdateYmdh andwtIconString:futureHourContentObjc[@"result"][@"futureHour"][i][@"wtIcon"] andwtTempString:strtmp andfutureHourLocationString:self->_mainMutableArray[j]];
                     [futureHourArray addObject:futureHour];

@@ -41,17 +41,18 @@
     
     _locationLabel.frame = CGRectMake(87, 0, 201, 50);
     _locationLabel.textColor = [UIColor whiteColor];
-    _locationLabel.textAlignment = UITextAlignmentCenter;
+    _locationLabel.textAlignment = NSTextAlignmentCenter;
     _locationLabel.font = [UIFont systemFontOfSize:35];
     
     _temperatureLabel.frame = CGRectMake(112, 70, 151, 130);
     _temperatureLabel.textColor = [UIColor whiteColor];
     _temperatureLabel.font = [UIFont systemFontOfSize:90];
+    _temperatureLabel.textAlignment = NSTextAlignmentCenter;
 
     _weatherLabel.frame = CGRectMake(162, 50, 51, 20);
     _weatherLabel.textColor = [UIColor whiteColor];
     _weatherLabel.font = [UIFont systemFontOfSize:20];
-    _weatherLabel.textAlignment = UITextAlignmentCenter;
+    _weatherLabel.textAlignment = NSTextAlignmentCenter;
 
     NSDate *dt = [NSDate date];
     NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];

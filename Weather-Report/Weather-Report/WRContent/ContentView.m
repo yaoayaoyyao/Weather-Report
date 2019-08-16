@@ -50,6 +50,7 @@ static NSString *nowString = @"nowCell";
 
 
 - (void)layoutSubviews {
+    
     [super layoutSubviews];
     
     _contentHeadView.weatherLabel.text = _nowWeather.cond;
